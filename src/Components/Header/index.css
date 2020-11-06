@@ -1,0 +1,21 @@
+.nav-before-line::before{
+    content: '';
+    background: #0e172c;
+    width: 0;
+    height: 2px;    
+    position: absolute;
+    top: 98%;
+    left: 0;
+    transition: all ease-in .2s;
+}
+
+.nav-before-line:hover{
+    background: rgba(240, 240, 240, 0.6);
+}
+
+.nav-before-line:hover::before{
+    width: 100%;
+}
+
+
+
