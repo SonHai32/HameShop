@@ -8,12 +8,14 @@ import {
 } from "@ant-design/icons";
 import "./index.css";
 
+import firebase from '../../firebase'
 const { Title } = Typography;
+
 
 const menu = (
   <Menu style={{ marginTop: 40 }}>
     <Menu.Item key="0">
-      <a href="http://www.alipay.com/">1st menu item</a>
+      <a href="http://www.alipay.com/">Trang điểm </a>
     </Menu.Item>
     <Menu.Item key="1">
       <a href="http://www.taobao.com/">2nd menu item</a>
@@ -22,25 +24,15 @@ const menu = (
     <Menu.Item key="3">3rd menu item</Menu.Item>
   </Menu>
 );
-const NavMenu = () => (
+const NavMenu = ({categories}) => (
   <React.Fragment>
+    {categories.map(val =>(
     <div className="header-nav-item nav-before-line nav-before-circle">
-      <Dropdown overlay={menu} placement='bottomCenter'>
-        <span>Mỹ phẩm</span>
-      </Dropdown>
+        <span>{val.VN_NAME} </span>
     </div>
-    <div className="header-nav-item nav-before-line nav-before-circle">
-      <span>Mỹ phẩm</span>
-    </div>
-    <div className="header-nav-item nav-before-line nav-before-circle">
-      <span>Hàng tiêu dùng</span>
-    </div>
-    <div className="header-nav-item nav-before-line nav-before-circle">
-      <span>Hàng gia dụng</span>
-    </div>
-    <div className="header-nav-item nav-before-line nav-before-circle">
-      <span>Chăm sóc sức khỏe</span>
-    </div>
+    ))}
+    
+    
   </React.Fragment>
 );
 
@@ -48,6 +40,21 @@ const Header = () => {
   const [userDrawer, setUserDrawer] = React.useState(false);
   const [searchDrawer, setSearchDrawer] = React.useState(false);
   const [cartDrawer, setCartDrawer] = React.useState(false);
+  const [categories, setCategories] = React.useState([]);
+
+  const DB = firebase.database();
+  const CATE_REF = DB.ref('Categories');
+
+
+  React.useEffect(() =>{
+    const fetchDataCate  =() =>{
+      CATE_REF.on('value', snap =>{
+        setCategories(Object.values( snap.val()))
+      }, err => console.log(err))
+    }
+    fetchDataCate()
+    
+  }, [])
 
   const IconController = () => (
     <React.Fragment>
@@ -106,7 +113,7 @@ const Header = () => {
             </Title>
           </Col>
           <Col md={17} sm={20} xs={24} className="header-logo-container">
-            <NavMenu />
+            <NavMenu categories={categories} />
           </Col>
           <Col md={4} sm={4} xs={24} className="header-logo-container">
             <IconController />
